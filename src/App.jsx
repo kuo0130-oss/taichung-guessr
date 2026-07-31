@@ -58,7 +58,8 @@ const [currentQuestion, setCurrentQuestion] =
   const [gameFinished, setGameFinished] =
     useState(false);
 
-
+const [gameStarted, setGameStarted] =
+  useState(false);
 
   function loadStreetView(question){
 
@@ -215,7 +216,85 @@ setResult({
 
 
 
+if(!gameStarted){
 
+
+return (
+
+<div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
+
+
+<div className="bg-white rounded-xl p-10 text-center max-w-md">
+
+
+<h1 className="text-4xl font-bold mb-6">
+
+🏠 台中商耕 Challenge
+
+</h1>
+
+
+<p className="text-gray-600 mb-8">
+
+探索台中各大生活圈、重劃區與商圈周邊
+
+挑戰你對台中的熟悉程度
+
+</p>
+
+
+
+<div className="mb-8 text-left">
+
+
+<p>
+
+📍 30 個城市題庫
+
+</p>
+
+
+<p>
+
+🎯 每局 10 題挑戰
+
+</p>
+
+
+<p>
+
+🏆 依距離計算分數
+
+</p>
+
+
+</div>
+
+
+
+<button
+
+onClick={()=>setGameStarted(true)}
+
+className="bg-green-500 text-white px-10 py-4 rounded-xl text-xl font-bold"
+
+>
+
+開始挑戰
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+);
+
+
+}
 
   if(gameFinished){
 
