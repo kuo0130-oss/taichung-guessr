@@ -54,6 +54,8 @@ const [currentQuestion, setCurrentQuestion] =
   const [totalScore, setTotalScore] =
     useState(0);
 
+    const [totalDistance, setTotalDistance] =
+  useState(0);
 
   const [gameFinished, setGameFinished] =
     useState(false);
@@ -210,6 +212,9 @@ setResult({
       totalScore + score
     );
 
+    setTotalDistance(
+  totalDistance + Math.round(distance)
+);
 
   }
 
@@ -296,6 +301,29 @@ className="bg-green-500 text-white px-10 py-4 rounded-xl text-xl font-bold"
 
 }
 
+let level = "";
+
+if(totalScore >= 9000){
+
+level="🏆 台中達人";
+
+}
+else if(totalScore >=7000){
+
+level="🥇 熟悉台中";
+
+}
+else if(totalScore >=5000){
+
+level="🥈 生活圈探索者";
+
+}
+else{
+
+level="🥉 台中新朋友";
+
+}
+
   if(gameFinished){
 
 
@@ -315,15 +343,44 @@ className="bg-green-500 text-white px-10 py-4 rounded-xl text-xl font-bold"
 
 
 
-          <p className="text-xl mb-4">
+<p className="text-xl mb-4">
 
-            你的總分：
+你的總分：
 
-            {totalScore}
+<span className="font-bold">
 
-          </p>
+{totalScore}
+
+</span>
+
+分
+
+</p>
 
 
+<p className="mb-4">
+
+平均距離：
+
+<span className="font-bold">
+
+{
+Math.round(
+totalDistance / 10
+)
+}
+
+</span>
+
+公尺
+
+</p>
+
+<h2 className="text-2xl font-bold mb-4">
+
+{level}
+
+</h2>
 
           <p className="text-gray-600 mb-6">
 
