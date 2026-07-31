@@ -310,9 +310,12 @@ setAnswered(true);
 
 
 
-    setTotalScore(
-      totalScore + score
-    );
+setTotalScore(
+ Math.min(
+  totalScore + score,
+  10000
+ )
+);
 
 
     setTotalDistance(

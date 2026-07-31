@@ -44,48 +44,24 @@ export function calculateDistance(
 
 }export function calculateScore(distance){
 
-  if(distance < 50){
-
-    return 1000;
-
-  }
+  let score =
+    1000 - Math.floor(distance / 10);
 
 
-  if(distance < 100){
+  if(score < 0){
 
-    return 900;
+    score = 0;
 
   }
 
 
-  if(distance < 300){
+  if(score > 1000){
 
-    return 800;
-
-  }
-
-
-  if(distance < 500){
-
-    return 700;
+    score = 1000;
 
   }
 
 
-  if(distance < 1000){
-
-    return 500;
-
-  }
-
-
-  if(distance < 3000){
-
-    return 300;
-
-  }
-
-
-  return 100;
+  return score;
 
 }
