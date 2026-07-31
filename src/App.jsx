@@ -61,6 +61,9 @@ function App() {
   const [gameStarted,setGameStarted] =
     useState(false);
 
+const [answered, setAnswered] =
+  useState(false);
+
     const [timeLeft, setTimeLeft] =
   useState(60);
 
@@ -221,7 +224,9 @@ useEffect(()=>{
 
 
     setResult(null);
-    
+
+    setAnswered(false);
+
 setTimeLeft(60);
 
     setQuestionNumber(
@@ -239,6 +244,9 @@ setTimeLeft(60);
 
   function submitAnswer(){
 
+        if(answered){
+      return;
+    }
 
     if(!guessPosition){
 
@@ -298,7 +306,7 @@ setTimeLeft(60);
 
     });
 
-
+setAnswered(true);
 
 
 
@@ -750,7 +758,13 @@ className="bg-green-500 text-white px-8 py-3 rounded-xl"
 
 >
 
-送出答案
+{
+ answered
+ ?
+ "已完成本題"
+ :
+ "送出答案"
+}
 
 </button>
 
