@@ -18,14 +18,19 @@ import {
 function App() {
 
 
-  const [currentQuestion, setCurrentQuestion] =
-    useState(
-      questions[
-        Math.floor(
-          Math.random() * questions.length
-        )
-      ]
-    );
+  const [questionList, setQuestionList] =
+  useState(
+    [...questions]
+      .sort(
+        ()=>Math.random()-0.5
+      )
+  );
+
+
+const [currentQuestion, setCurrentQuestion] =
+  useState(
+    questionList[0]
+  );
 
 
   const [streetViewImage, setStreetViewImage] =
@@ -43,6 +48,8 @@ function App() {
   const [questionNumber, setQuestionNumber] =
     useState(1);
 
+    const [questionIndex, setQuestionIndex] =
+  useState(0);
 
   const [totalScore, setTotalScore] =
     useState(0);
@@ -85,50 +92,47 @@ function App() {
 
 
 
-  function randomQuestion(){
+function randomQuestion(){
 
 
-    if(questionNumber >= 10){
+  if(questionNumber >= 10){
 
-      setGameFinished(true);
+    setGameFinished(true);
 
-      return;
-
-    }
-
-
-
-    const random =
-      Math.floor(
-        Math.random() *
-        questions.length
-      );
-
-
-
-    const nextQuestion =
-      questions[random];
-
-
-
-    setCurrentQuestion(
-      nextQuestion
-    );
-
-
-
-    setGuessPosition(null);
-
-    setResult(null);
-
-
-
-    setQuestionNumber(
-      questionNumber + 1
-    );
-
+    return;
 
   }
+
+
+
+  const nextIndex =
+    questionIndex + 1;
+
+
+
+  setCurrentQuestion(
+    questionList[nextIndex]
+  );
+
+
+  setQuestionIndex(
+    nextIndex
+  );
+
+
+  setGuessPosition(null);
+
+
+  setResult(null);
+
+
+
+  setQuestionNumber(
+    questionNumber + 1
+  );
+
+
+}
 
 
 
@@ -283,7 +287,7 @@ setResult({
 
   return (
 
-    <div className="min-h-screen bg-slate-900 p-8">
+    <div className="min-h-screen bg-slate-900 p-4 md:p-8">
 
 
 
@@ -306,11 +310,48 @@ setResult({
         <div className="bg-white rounded-xl p-6">
 
 
-          <h2 className="text-xl font-bold mb-4">
+<h2 className="text-xl font-bold mb-4">
 
-            第 {questionNumber} / 10 題
+第 {questionNumber} / 10 題
 
-          </h2>
+</h2>
+
+
+<div className="flex gap-1 mb-4">
+
+
+{
+Array.from({length:10})
+.map((_,index)=>(
+
+<div
+
+key={index}
+
+className={
+
+index < questionNumber
+
+?
+
+"bg-green-500 h-2 flex-1 rounded"
+
+:
+
+"bg-gray-300 h-2 flex-1 rounded"
+
+}
+
+>
+
+</div>
+
+))
+
+}
+
+
+</div>
 
 
 
@@ -567,7 +608,7 @@ result && (
 
 
 
-      <div className="text-center mt-8">
+      <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
 
 
 
