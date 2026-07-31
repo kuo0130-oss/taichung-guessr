@@ -61,6 +61,8 @@ function App() {
   const [gameStarted,setGameStarted] =
     useState(false);
 
+    const [timeLeft, setTimeLeft] =
+  useState(60);
 
   const [gameFinished,setGameFinished] =
     useState(false);
@@ -107,7 +109,69 @@ function App() {
 
   },[currentQuestion]);
 
+useEffect(()=>{
 
+  if(!gameStarted || gameFinished){
+    return;
+  }
+
+
+  if(result){
+    return;
+  }
+
+
+  const timer = setInterval(()=>{
+
+
+    setTimeLeft(prev=>{
+
+
+      if(prev <= 1){
+
+
+        clearInterval(timer);
+
+
+        setResult({
+
+          distance:0,
+
+          score:0,
+
+          name:currentQuestion.name,
+
+          road:currentQuestion.road,
+
+          description:currentQuestion.description
+
+        });
+
+
+        return 0;
+
+      }
+
+
+      return prev - 1;
+
+
+    });
+
+
+  },1000);
+
+
+
+  return ()=>clearInterval(timer);
+
+
+},[
+  gameStarted,
+  gameFinished,
+  result,
+  currentQuestion
+]);
 
 
 
@@ -157,7 +221,8 @@ function App() {
 
 
     setResult(null);
-
+    
+setTimeLeft(60);
 
     setQuestionNumber(
       questionNumber + 1
@@ -496,6 +561,12 @@ return (
 <h2 className="text-xl font-bold mb-4">
 
 第 {questionNumber} / 10 題
+
+<span className="ml-4 text-red-500">
+
+⏱ {timeLeft}s
+
+</span>
 
 </h2>
 
