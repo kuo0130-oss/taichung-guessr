@@ -18,53 +18,67 @@ import {
 function App() {
 
 
-  const [questionList, setQuestionList] =
-  useState(
-    [...questions]
-      .sort(
+  const [questionList] =
+    useState(
+      [...questions].sort(
         ()=>Math.random()-0.5
       )
-  );
+    );
 
 
-const [currentQuestion, setCurrentQuestion] =
-  useState(
-    questionList[0]
-  );
+  const [questionIndex,setQuestionIndex] =
+    useState(0);
 
 
-  const [streetViewImage, setStreetViewImage] =
+  const [currentQuestion,setCurrentQuestion] =
+    useState(null);
+
+
+  const [streetViewImage,setStreetViewImage] =
     useState("");
 
 
-  const [guessPosition, setGuessPosition] =
+  const [guessPosition,setGuessPosition] =
     useState(null);
 
 
-  const [result, setResult] =
+  const [result,setResult] =
     useState(null);
 
 
-  const [questionNumber, setQuestionNumber] =
+  const [questionNumber,setQuestionNumber] =
     useState(1);
 
-    const [questionIndex, setQuestionIndex] =
-  useState(0);
 
-  const [totalScore, setTotalScore] =
+  const [totalScore,setTotalScore] =
     useState(0);
 
-    const [totalDistance, setTotalDistance] =
-  useState(0);
 
-  const [gameFinished, setGameFinished] =
+  const [totalDistance,setTotalDistance] =
+    useState(0);
+
+
+  const [gameStarted,setGameStarted] =
     useState(false);
 
-const [gameStarted, setGameStarted] =
-  useState(false);
+
+  const [gameFinished,setGameFinished] =
+    useState(false);
+
+
+
+  useEffect(()=>{
+
+    setCurrentQuestion(
+      questionList[0]
+    );
+
+  },[]);
+
+
+
 
   function loadStreetView(question){
-
 
     const url =
       getStreetViewImage(
@@ -83,59 +97,74 @@ const [gameStarted, setGameStarted] =
 
   useEffect(()=>{
 
-    loadStreetView(
-      currentQuestion
+    if(currentQuestion){
+
+      loadStreetView(
+        currentQuestion
+      );
+
+    }
+
+  },[currentQuestion]);
+
+
+
+
+
+
+  function randomQuestion(){
+
+
+    if(questionNumber >= 10){
+
+
+      if(!result){
+
+        alert(
+          "請先完成本題"
+        );
+
+        return;
+
+      }
+
+
+      setGameFinished(true);
+
+      return;
+
+    }
+
+
+
+
+    const nextIndex =
+      questionIndex + 1;
+
+
+
+    setQuestionIndex(
+      nextIndex
     );
 
-  }, [currentQuestion]);
+
+    setCurrentQuestion(
+      questionList[nextIndex]
+    );
 
 
+    setGuessPosition(null);
 
 
+    setResult(null);
 
 
+    setQuestionNumber(
+      questionNumber + 1
+    );
 
-function randomQuestion(){
-
-
-  if(questionNumber >= 10){
-
-    setGameFinished(true);
-
-    return;
 
   }
-
-
-
-  const nextIndex =
-    questionIndex + 1;
-
-
-
-  setCurrentQuestion(
-    questionList[nextIndex]
-  );
-
-
-  setQuestionIndex(
-    nextIndex
-  );
-
-
-  setGuessPosition(null);
-
-
-  setResult(null);
-
-
-
-  setQuestionNumber(
-    questionNumber + 1
-  );
-
-
-}
 
 
 
@@ -186,23 +215,23 @@ function randomQuestion(){
 
 
 
-setResult({
+    setResult({
 
-  distance:
-    Math.round(distance),
+      distance:
+        Math.round(distance),
 
-  score,
+      score,
 
-  name:
-    currentQuestion.name,
+      name:
+        currentQuestion.name,
 
-  road:
-    currentQuestion.road,
+      road:
+        currentQuestion.road,
 
-  description:
-    currentQuestion.description
+      description:
+        currentQuestion.description
 
-});
+    });
 
 
 
@@ -212,98 +241,24 @@ setResult({
       totalScore + score
     );
 
+
     setTotalDistance(
-  totalDistance + Math.round(distance)
-);
+      totalDistance +
+      Math.round(distance)
+    );
+
 
   }
 
 
 
 
-if(!gameStarted){
 
 
-return (
-
-<div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
+let level="";
 
 
-<div className="bg-white rounded-xl p-10 text-center max-w-md">
-
-
-<h1 className="text-4xl font-bold mb-6">
-
-🏠 台中商耕 Challenge
-
-</h1>
-
-
-<p className="text-gray-600 mb-8">
-
-探索台中各大生活圈、重劃區與商圈周邊
-
-挑戰你對台中的熟悉程度
-
-</p>
-
-
-
-<div className="mb-8 text-left">
-
-
-<p>
-
-📍 30 個城市題庫
-
-</p>
-
-
-<p>
-
-🎯 每局 10 題挑戰
-
-</p>
-
-
-<p>
-
-🏆 依距離計算分數
-
-</p>
-
-
-</div>
-
-
-
-<button
-
-onClick={()=>setGameStarted(true)}
-
-className="bg-green-500 text-white px-10 py-4 rounded-xl text-xl font-bold"
-
->
-
-開始挑戰
-
-</button>
-
-
-
-</div>
-
-
-</div>
-
-);
-
-
-}
-
-let level = "";
-
-if(totalScore >= 9000){
+if(totalScore >=9000){
 
 level="🏆 台中達人";
 
@@ -324,126 +279,218 @@ level="🥉 台中新朋友";
 
 }
 
-  if(gameFinished){
 
 
-    return (
-
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
 
 
-        <div className="bg-white rounded-xl p-10 text-center">
+
+if(!gameStarted){
 
 
-          <h1 className="text-2xl md:text-4xl font-bold mb-6">
+return (
 
-            🎉 挑戰完成
+<div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
 
-          </h1>
 
+<div className="bg-white rounded-xl p-10 text-center max-w-md">
+
+
+<h1 className="text-2xl md:text-4xl font-bold mb-6">
+
+🏠 台中商耕 Challenge
+
+</h1>
+
+
+<p className="text-gray-600 mb-8">
+
+探索台中各大生活圈、重劃區與商圈周邊
+
+<br/>
+
+挑戰你對台中的熟悉程度
+
+</p>
+
+
+
+<p>
+📍 30 個城市題庫
+</p>
+
+
+<p>
+🎯 每局 10 題挑戰
+</p>
+
+
+<p className="mb-8">
+🏆 距離越近分數越高
+</p>
+
+
+
+<button
+
+onClick={()=>setGameStarted(true)}
+
+className="bg-green-500 text-white px-10 py-4 rounded-xl text-xl font-bold"
+
+>
+
+開始挑戰
+
+</button>
+
+
+
+</div>
+
+</div>
+
+);
+
+}
+
+
+
+
+
+
+
+if(gameFinished){
+
+
+return (
+
+<div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
+
+
+<div className="bg-white rounded-xl p-10 text-center">
+
+
+<h1 className="text-3xl font-bold mb-6">
+
+🎉 挑戰完成
+
+</h1>
 
 
 <p className="text-xl mb-4">
 
 你的總分：
 
-<span className="font-bold">
-
+<b>
 {totalScore}
-
-</span>
+</b>
 
 分
 
 </p>
 
 
+
 <p className="mb-4">
 
 平均距離：
 
-<span className="font-bold">
+<b>
 
 {
 Math.round(
-totalDistance / 10
+totalDistance/10
 )
 }
 
-</span>
+</b>
 
 公尺
 
 </p>
 
-<h2 className="text-2xl font-bold mb-4">
+
+
+<h2 className="text-2xl font-bold mb-6">
 
 {level}
 
 </h2>
 
-          <p className="text-gray-600 mb-6">
-
-            你完成了 10 個台中地點挑戰
-
-          </p>
 
 
+<button
 
+onClick={()=>window.location.reload()}
 
-          <button
+className="bg-green-500 text-white px-8 py-3 rounded-xl"
 
-            onClick={()=>window.location.reload()}
+>
 
-            className="bg-green-500 text-white px-8 py-3 rounded-xl"
+再挑戰一次
 
-          >
-
-            再挑戰一次
-
-          </button>
-
-
-
-        </div>
-
-
-      </div>
-
-    );
-
-  }
+</button>
 
 
 
 
+<button
+
+onClick={()=>{
+
+navigator.clipboard.writeText(
+
+`我在台中商耕 Challenge 得到 ${totalScore} 分！${level}`
+
+);
+
+alert("成績已複製");
+
+}}
+
+className="bg-blue-500 text-white px-8 py-3 rounded-xl mt-3 md:mt-0 md:ml-3"
+
+>
+
+分享成績
+
+</button>
 
 
 
+</div>
 
-  return (
+</div>
 
-    <div className="min-h-screen bg-slate-900 p-4 md:p-8">
+);
 
-
-
-      <h1 className="text-4xl font-bold text-white text-center mb-8">
-
-        🏠 台中商耕 Guessr
-
-      </h1>
+}
 
 
 
 
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+
+return (
+
+<div className="min-h-screen bg-slate-900 p-4 md:p-8">
+
+
+<h1 className="text-2xl md:text-4xl font-bold text-white text-center mb-8">
+
+🏠 台中商耕 Guessr
+
+</h1>
 
 
 
 
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <div className="bg-white rounded-xl p-6">
+
+
+<div className="bg-white rounded-xl p-6">
 
 
 <h2 className="text-xl font-bold mb-4">
@@ -453,38 +500,61 @@ totalDistance / 10
 </h2>
 
 
-<div className="flex gap-1 mb-4">
 
+<div className="flex gap-1 mb-4">
 
 {
 Array.from({length:10})
-.map((_,index)=>(
+.map((_,i)=>(
 
 <div
 
-key={index}
+key={i}
 
 className={
-
-index < questionNumber
-
+i < questionNumber
 ?
-
 "bg-green-500 h-2 flex-1 rounded"
-
 :
-
 "bg-gray-300 h-2 flex-1 rounded"
-
 }
 
->
-
-</div>
+></div>
 
 ))
+}
+
+</div>
+
+
+
+
+{
+streetViewImage && (
+
+<img
+
+src={streetViewImage}
+
+className="w-full h-[300px] md:h-[400px] object-cover rounded-lg"
+
+/>
+
+)
 
 }
+
+
+
+
+<p className="mt-4">
+
+地區：
+
+{currentQuestion?.district}
+
+</p>
+
 
 
 </div>
@@ -492,169 +562,55 @@ index < questionNumber
 
 
 
-          {
-            streetViewImage && (
 
-              <img
 
-                src={streetViewImage}
 
-                className="w-full h-[300px] md:h-[400px] object-cover rounded-lg"
+<div>
 
-              />
 
-            )
-          }
+<Map
 
+setGuessPosition={setGuessPosition}
 
+guessPosition={guessPosition}
 
+answerPosition={
 
-          <p className="mt-4 text-gray-700">
+result
+?
+{
+lat:currentQuestion.lat,
+lng:currentQuestion.lng
+}
+:
+null
 
-            地區：
+}
 
-            {currentQuestion.district}
+/>
 
-          </p>
 
 
 
-        </div>
 
-
-
-
-
-
-
-
-        <div>
-
-
-          <Map
-
-            setGuessPosition={
-              setGuessPosition
-            }
-
-
-            guessPosition={
-              guessPosition
-            }
-
-
-            answerPosition={
-
-              result
-
-              ?
-
-              {
-
-                lat:
-                  currentQuestion.lat,
-
-
-                lng:
-                  currentQuestion.lng
-
-              }
-
-              :
-
-              null
-
-            }
-
-
-          />
-
-
-
-
-
-          {
-            guessPosition && (
-
-              <div className="mt-4 bg-white rounded-xl p-4">
-
-
-                <p>
-
-                  你的猜測：
-
-                </p>
-
-
-                <p>
-
-                  緯度：
-
-                  {guessPosition.lat}
-
-                </p>
-
-
-                <p>
-
-                  經度：
-
-                  {guessPosition.lng}
-
-                </p>
-
-
-              </div>
-
-            )
-          }
-
-
-
-
-
-
-
-          <div className="mt-4 bg-white rounded-xl p-4">
-
-
-            <p className="font-bold">
-
-              目前總分：
-
-              {totalScore}
-
-            </p>
-
-
-          </div>
-
-
-
-
-
-
-
-         {
+{
 result && (
 
 <div className="mt-4 bg-green-100 rounded-xl p-5">
 
 
-<h3 className="text-xl font-bold mb-3">
+<h3 className="font-bold text-xl">
 
 🎯 答案揭曉
 
 </h3>
 
 
-
-<p className="font-bold text-lg">
+<p>
 
 📍 {result.name}
 
 </p>
-
 
 
 <p>
@@ -664,62 +620,33 @@ result && (
 </p>
 
 
-
-<div className="mt-4 border-t pt-3">
-
-
 <p>
 
-距離答案：
-
-<span className="font-bold">
+距離：
 
 {result.distance}
 
 公尺
 
-</span>
-
 </p>
-
 
 
 <p>
 
-本題分數：
-
-<span className="font-bold">
+分數：
 
 {result.score}
 
 分
 
-</span>
-
 </p>
 
 
-</div>
+<div className="bg-white rounded-lg p-3 mt-3">
 
-
-
-
-<div className="mt-4 bg-white rounded-lg p-3">
-
-
-<h4 className="font-bold mb-2">
-
-🏠 區域情報
-
-</h4>
-
-
-<p className="text-gray-700">
+🏠
 
 {result.description}
-
-</p>
-
 
 </div>
 
@@ -727,74 +654,62 @@ result && (
 </div>
 
 )
+
 }
 
 
 
-        </div>
+</div>
 
 
-
-      </div>
-
-
-
+</div>
 
 
 
 
 
-      <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
+<div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
+
+
+<button
+
+onClick={submitAnswer}
+
+className="bg-green-500 text-white px-8 py-3 rounded-xl"
+
+>
+
+送出答案
+
+</button>
 
 
 
-        <button
+<button
 
-          onClick={submitAnswer}
+onClick={randomQuestion}
 
-          className="bg-green-500 text-white px-8 py-3 rounded-xl mr-4"
+className="bg-white px-8 py-3 rounded-xl"
 
-        >
+>
 
-          送出答案
+{
+questionNumber>=10
+?
+"完成挑戰"
+:
+"下一題"
+}
 
-        </button>
-
-
-
-
-
-
-
-        <button
-
-          onClick={randomQuestion}
-
-          className="bg-white px-8 py-3 rounded-xl"
-
-        >
-
-          {
-            questionNumber >= 10
-            ?
-            "完成挑戰"
-            :
-            "下一題"
-          }
-
-        </button>
+</button>
 
 
+</div>
 
 
-      </div>
+</div>
 
-
-
-
-    </div>
-
-  );
+);
 
 
 }
