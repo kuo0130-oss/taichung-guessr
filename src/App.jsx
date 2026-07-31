@@ -224,7 +224,7 @@ setResult({
         <div className="bg-white rounded-xl p-10 text-center">
 
 
-          <h1 className="text-4xl font-bold mb-6">
+          <h1 className="text-2xl md:text-4xl font-bold mb-6">
 
             🎉 挑戰完成
 
@@ -297,7 +297,7 @@ setResult({
 
 
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
 
 
@@ -322,7 +322,7 @@ setResult({
 
                 src={streetViewImage}
 
-                className="w-full h-[400px] object-cover rounded-lg"
+                className="w-full h-[300px] md:h-[400px] object-cover rounded-lg"
 
               />
 
